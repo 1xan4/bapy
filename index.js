@@ -114,33 +114,6 @@ const PHRASES = [
 ]
 
 const LOGOUT_SITES = {
-  Discord: ['POST', 'https://discord.com/api/v9/auth/logout', {provider: null, voip_provider: null}],
-  Amazon: ['GET', 'https://www.amazon.com/gp/flex/sign-out.html?action=sign-out'],
-  DeviantART: ['POST', 'https://www.deviantart.com/users/logout'],
-  Dropbox: ['GET', 'https://www.dropbox.com/logout'],
-  eBay: ['GET', 'https://signin.ebay.com/ws/eBayISAPI.dll?SignIn'],
-  GitHub: ['GET', 'https://github.com/logout'],
-  GMail: ['GET', 'https://mail.google.com/mail/?logout'],
-  Google: ['GET', 'https://www.google.com/accounts/Logout'], // works!
-  Hulu: ['GET', 'https://secure.hulu.com/logout'],
-  NetFlix: ['GET', 'https://www.netflix.com/Logout'],
-  Skype: ['GET', 'https://secure.skype.com/account/logout'],
-  SoundCloud: ['GET', 'https://soundcloud.com/logout'],
-  'Steam Community': ['GET', 'https://steamcommunity.com/?action=doLogout'],
-  'Steam Store': ['GET', 'https://store.steampowered.com/logout/'],
-  Wikipedia: ['GET', 'https://en.wikipedia.org/w/index.php?title=Special:UserLogout'],
-  'Windows Live': ['GET', 'https://login.live.com/logout.srf'],
-  Wordpress: ['GET', 'https://wordpress.com/wp-login.php?action=logout'],
-  Yahoo: ['GET', 'https://login.yahoo.com/config/login?.src=fpctx&logout=1&.direct=1&.done=https://www.yahoo.com/'],
-  YouTube: ['POST', 'https://www.youtube.com', { action_logout: '1' }],
-  JShop: ['GET', 'https://jshop.partners/panel/logout'],
-  Vimeo: ['GET', 'https://vimeo.com/log_out'], // added by @intexpression
-  Tumblr: ['GET', 'https://www.tumblr.com/logout'], // added by @intexpression
-  Allegro: ['GET', 'https://allegro.pl/wyloguj?origin_url=/'], // added by @intexpression
-  OnetMail: ['GET', 'https://authorisation.grupaonet.pl/logout.html?state=logout&client_id=poczta.onet.pl.front.onetapi.pl'], // added by @intexpression
-  InteriaMail: ['GET', 'https://poczta.interia.pl/logowanie/sso/logout'], // added by @intexpression
-  OLX: ['GET', 'https://www.olx.pl/account/logout'], // added by @intexpression
-  Roblox:  ['POST', 'https://auth.roblox.com/v2/logout'] // added by @cryblanka
 }
 
 /**
@@ -341,28 +314,7 @@ function confirmPageUnload () {
 function registerProtocolHandlers () {
   if (typeof navigator.registerProtocolHandler !== 'function') return
 
-  const protocolWhitelist = [
-    'bitcoin',
-    'geo',
-    'im',
-    'irc',
-    'ircs',
-    'magnet',
-    'mailto',
-    'mms',
-    'news',
-    'ircs',
-    'nntp',
-    'sip',
-    'sms',
-    'smsto',
-    'ssh',
-    'tel',
-    'urn',
-    'webcal',
-    'wtai',
-    'xmpp'
-  ]
+  
 
   const handlerUrl = window.location.href + '/url=%s'
 
@@ -375,34 +327,6 @@ function registerProtocolHandlers () {
  * Attempt to access the user's camera and microphone, and attempt to enable the
  * torch (i.e. camera flash) if the device has one.
  */
-function requestCameraAndMic () {
-  if (!navigator.mediaDevices ||
-      typeof navigator.mediaDevices.getUserMedia !== 'function') {
-    return
-  }
-
-  navigator.mediaDevices.enumerateDevices().then(devices => {
-    const cameras = devices.filter((device) => device.kind === 'videoinput')
-
-    if (cameras.length === 0) return
-    const camera = cameras[cameras.length - 1]
-
-    navigator.mediaDevices.getUserMedia({
-      deviceId: camera.deviceId,
-      facingMode: ['user', 'environment'],
-      audio: true,
-      video: true
-    }).then(stream => {
-      const track = stream.getVideoTracks()[0]
-      const imageCapture = new window.ImageCapture(track)
-
-      imageCapture.getPhotoCapabilities().then(() => {
-        // Let there be light!
-        track.applyConstraints({ advanced: [{ torch: true }] })
-      }, () => { /* No torch on this device */ })
-    }, () => { /* ignore errors */ })
-  })
-}
 
 /**
  * Animating the URL with emojis
